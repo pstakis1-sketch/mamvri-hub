@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mamvri — Digital Solutions</title>
+  <meta name="description" content="Ψηφιακές λύσεις για παραδοσιακούς κλάδους. Digital solutions for traditional industries.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy-900: #071E3A;
+      --navy-800: #0C2D52;
+      --navy-700: #12406E;
+      --blue-mid: #315F93;
+      --blue-light: #6F8DB2;
+      --blue-pale: #A8BDD4;
+      --cream: #F0EDE6;
+      --white: #FAFAF8;
+      --gold: #9B7521;
+      --gold-light: #C9A84C;
+      --gold-subtle: #7A6318;
+      --text-primary: #071E3A;
+      --text-secondary: #3A5068;
+      --text-muted: #6F8DB2;
+    }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.4s, backdrop-filter 0.4s, padding 0.4s;
+    }
+    .nav.scrolled {
+      background: rgba(7, 30, 58, 0.9);
+      backdrop-filter: blur(20px);
+      padding: 1rem 3rem;
+    }
+    .nav-logo svg { height: 32px; width: auto; }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .lang-toggle {
+      display: flex; align-items: center; gap: 0.25rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px; padding: 0.3rem 0.35rem;
+      cursor: pointer; transition: background 0.3s;
+    }
+    .lang-toggle:hover { background: rgba(255,255,255,0.15); }
+    .lang-btn {
+      border: none; background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;
+      padding: 0.3rem 0.6rem; border-radius: 100px;
+      cursor: pointer; transition: all 0.3s;
+    }
+    .lang-btn.active { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; position: relative;
+      background: var(--navy-900); overflow: hidden;
+    }
+    .hero-bg { position: absolute; inset: 0; overflow: hidden; }
+    .hero-gradient-1 {
+      position: absolute; width: 800px; height: 800px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(49,95,147,0.3) 0%, transparent 70%);
+      top: -200px; right: -200px; animation: float1 12s ease-in-out infinite;
+    }
+    .hero-gradient-2 {
+      position: absolute; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(111,141,178,0.15) 0%, transparent 70%);
+      bottom: -100px; left: -150px; animation: float2 15s ease-in-out infinite;
+    }
+    .hero-gradient-3 {
+      position: absolute; width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(155,117,33,0.08) 0%, transparent 70%);
+      top: 40%; left: 50%; transform: translate(-50%,-50%); animation: float3 10s ease-in-out infinite;
+    }
+    @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,30px) scale(1.05)} }
+    @keyframes float2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,-40px) scale(1.08)} }
+    @keyframes float3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.15)} }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(111,141,178,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111,141,178,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 2rem; }
+    .hero-symbol { margin-bottom: 2.5rem; opacity: 0; }
+    .hero-symbol svg { width: 120px; height: auto; }
+    .hero-title {
+      font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 700;
+      color: #fff; letter-spacing: -0.04em; line-height: 1;
+      margin-bottom: 1.5rem; opacity: 0;
+    }
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.35rem); color: var(--blue-pale);
+      font-weight: 300; max-width: 480px; margin: 0 auto 3rem;
+      line-height: 1.6; opacity: 0;
+    }
+    .hero-scroll-indicator {
+      position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0;
+    }
+    .scroll-text {
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue-light); font-weight: 500;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--blue-light), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse { 0%,100%{opacity:1;transform:scaleY(1)} 50%{opacity:0.3;transform:scaleY(0.6)} }
+
+    /* ===== SHARED DARK SECTION ===== */
+    .dark-section {
+      background: var(--navy-900);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ===== INTRO ===== */
+    .intro-section { padding: 0; }
+    .intro-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 8rem 2rem 6rem;
+      position: relative; z-index: 1;
+    }
+    .intro-accent-line {
+      width: 48px; height: 3px;
+      background: linear-gradient(90deg, var(--blue-light), transparent);
+      margin-bottom: 2.5rem;
+    }
+    .intro-lead {
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 500; color: #fff;
+      line-height: 1.5; letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+    }
+    .intro-body {
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+      color: var(--blue-pale); line-height: 1.85; font-weight: 300;
+    }
+    .intro-body p { margin-bottom: 1.5rem; }
+    .intro-body p:last-child { margin-bottom: 0; }
+    .intro-inner::before {
+      content: '';
+      position: absolute; left: -40px; top: 8rem; bottom: 6rem;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--blue-mid), transparent);
+      opacity: 0.3;
+    }
+
+    /* ===== PHILOSOPHY ===== */
+    .philosophy-section {
+      padding: 6rem 2rem 8rem;
+      position: relative;
+    }
+    .philosophy-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(111,141,178,0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .philosophy-label {
+      font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--blue-light); font-weight: 600; text-align: center;
+      margin-bottom: 1rem;
+    }
+    .philosophy-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.75rem); font-weight: 700;
+      text-align: center; color: #fff; letter-spacing: -0.03em;
+      margin-bottom: 4rem;
+    }
+    .pillars {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2rem; max-width: 1000px;
+      margin: 0 auto; position: relative; z-index: 1;
+    }
+    .pillar {
+      padding: 2.5rem; border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(111,141,178,0.1);
+      transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+    }
+    .pillar:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(111,141,178,0.2);
+      transform: translateY(-4px);
+    }
+    .pillar-icon {
+      width: 48px; height: 48px; margin-bottom: 1.5rem;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 14px; background: rgba(49,95,147,0.15);
+    }
+    .pillar-icon svg { width: 24px; height: 24px; stroke: var(--blue-pale); fill: none; stroke-width: 1.5; }
+    .pillar-title {
+      font-size: 1.1rem; font-weight: 600; color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .pillar-text {
+      font-size: 0.9rem; color: var(--blue-pale); line-height: 1.7; font-weight: 300;
+    }
+
+    /* ===== WHO WE ARE ===== */
+    .about-section {
+      background: var(--navy-800);
+      padding: 8rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .about-section::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(111,141,178,0.15), transparent);
+    }
+    .about-inner {
+      max-width: 740px; margin: 0 auto;
+    }
+    .about-label {
+      font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--blue-light); font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .about-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 700;
+      color: #fff; letter-spacing: -0.03em;
+      margin-bottom: 2.5rem;
+    }
+    .about-body {
+      font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+      color: var(--blue-pale); line-height: 1.85; font-weight: 300;
+    }
+    .about-body p { margin-bottom: 1.5rem; }
+    .about-body p:last-child { margin-bottom: 0; }
+
+    /* ===== PRODUCTS ===== */
+    .products-section {
+      padding: 10rem 2rem;
+      position: relative;
+      background: var(--white);
+    }
+    .products-section::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 200px;
+      background: linear-gradient(to bottom, var(--navy-800), var(--white));
+      pointer-events: none;
+    }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--blue-light); font-weight: 600; text-align: center;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700;
+      text-align: center; color: var(--navy-900); letter-spacing: -0.03em;
+      margin-bottom: 5rem;
+    }
+
+    /* Product Card */
+    .product-card-container { max-width: 900px; margin: 0 auto; }
+    .product-card {
+      background: linear-gradient(135deg, #FFFCF5 0%, #F7F3EC 50%, #F0EBE0 100%);
+      border-radius: 24px; padding: 3.5rem;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(155,117,33,0.12);
+      box-shadow: 0 4px 6px rgba(7,30,58,0.03), 0 20px 60px rgba(7,30,58,0.06);
+      transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), box-shadow 0.5s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 12px rgba(7,30,58,0.04), 0 32px 80px rgba(7,30,58,0.1);
+    }
+    .product-card::before {
+      content: '';
+      position: absolute; top: -50%; right: -20%; width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(155,117,33,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .product-card-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+    }
+    .product-info { position: relative; z-index: 1; }
+    .product-logo { margin-bottom: 2rem; }
+    .product-logo svg { height: 45px; width: auto; }
+    .product-headline {
+      font-family: 'Caudex', serif;
+      font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 700;
+      color: var(--navy-900); line-height: 1.3; margin-bottom: 1.25rem;
+    }
+    .product-description {
+      font-size: 0.95rem; color: var(--text-secondary);
+      line-height: 1.75; margin-bottom: 2rem;
+    }
+    .product-cta {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      padding: 0.85rem 1.75rem; background: var(--gold); color: #fff;
+      text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      border-radius: 12px;
+      transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+      position: relative; overflow: hidden;
+    }
+    .product-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .product-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(155,117,33,0.3);
+    }
+    .product-cta:hover::before { opacity: 1; }
+    .product-cta span, .product-cta svg { position: relative; z-index: 1; }
+    .cta-arrow { transition: transform 0.3s; }
+    .product-cta:hover .cta-arrow { transform: translateX(4px); }
+
+    /* Tablet Mockup — matches actual Mnemoneusis app */
+    .product-visual { position: relative; display: flex; justify-content: center; align-items: center; }
+    .tablet-frame {
+      width: 280px; height: 400px; background: #2C2C2C;
+      border-radius: 20px; padding: 10px;
+      box-shadow: 0 25px 70px rgba(7,30,58,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+      position: relative;
+    }
+    .tablet-frame::after {
+      content: ''; position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+      width: 30px; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.06);
+    }
+    .tablet-app {
+      width: 100%; height: 100%;
+      background: #FFF8F0;
+      border-radius: 12px; overflow: hidden;
+      display: flex; flex-direction: column;
+      padding: 1rem 0.9rem;
+    }
+    /* Church name */
+    .app-church {
+      font-family: 'Caudex', serif; font-size: 0.38rem;
+      font-weight: 400; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+      text-align: center; margin-bottom: 0.25rem;
+    }
+    /* Main heading */
+    .app-heading {
+      font-family: 'Caudex', serif; font-size: 0.85rem;
+      font-weight: 700; color: var(--navy-900);
+      text-align: center; margin-bottom: 0.15rem;
+    }
+    /* Date subtitle */
+    .app-date {
+      font-family: 'Caudex', serif; font-size: 0.4rem;
+      font-style: italic; color: var(--text-muted);
+      text-align: center; margin-bottom: 0.9rem;
+    }
+    /* Section label (ΥΠΕΡ ΥΓΕΙΑΣ etc) */
+    .app-section-label {
+      display: flex; align-items: center; gap: 0.3rem;
+      margin-bottom: 0.35rem; margin-top: 0.15rem;
+    }
+    .app-section-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gold);
+    }
+    .app-section-text {
+      font-size: 0.4rem; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text-secondary); text-transform: uppercase;
+    }
+    /* Name card row */
+    .app-name-card {
+      background: #fff;
+      border-radius: 8px; padding: 0.45rem 0.6rem;
+      margin-bottom: 0.3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid rgba(155,117,33,0.06);
+      opacity: 0; transform: translateY(6px);
+    }
+    .app-name-text {
+      font-family: 'Caudex', serif; font-size: 0.55rem;
+      color: var(--navy-900); font-weight: 400;
+    }
+    .app-name-tag {
+      font-size: 0.35rem; color: var(--gold);
+      font-weight: 400; letter-spacing: 0.02em;
+      padding: 0.15rem 0.4rem; border-radius: 4px;
+      background: rgba(155,117,33,0.06);
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-section {
+      background: var(--navy-900);
+      padding: 8rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .contact-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(111,141,178,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111,141,178,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .contact-inner {
+      max-width: 600px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .contact-label {
+      font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--blue-light); font-weight: 600; text-align: center;
+      margin-bottom: 1rem;
+    }
+    .contact-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.75rem); font-weight: 700;
+      text-align: center; color: #fff; letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .contact-subtitle {
+      text-align: center; font-size: 1rem;
+      color: var(--blue-pale); font-weight: 300;
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-field label {
+      font-size: 0.8rem; font-weight: 500; color: var(--blue-pale);
+      letter-spacing: 0.02em;
+    }
+    .form-field input,
+    .form-field textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(111,141,178,0.15);
+      border-radius: 12px; padding: 0.85rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; color: #fff;
+      transition: border-color 0.3s, background 0.3s;
+      outline: none;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: var(--blue-mid);
+      background: rgba(255,255,255,0.06);
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: rgba(111,141,178,0.4);
+    }
+    .form-field textarea { resize: vertical; min-height: 120px; }
+    .form-submit {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 0.5rem; padding: 0.9rem 2rem;
+      background: var(--blue-mid); color: #fff;
+      border: none; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+      align-self: flex-start;
+    }
+    .form-submit:hover {
+      background: var(--navy-700);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(49,95,147,0.3);
+    }
+    .form-submit svg {
+      width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;
+      transition: transform 0.3s;
+    }
+    .form-submit:hover svg { transform: translateX(3px); }
+    .form-consent {
+      text-align: center; font-size: 0.7rem;
+      color: rgba(111,141,178,0.5); margin-top: 1.25rem;
+      line-height: 1.6;
+    }
+    .form-consent a {
+      color: var(--blue-pale); text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.3s;
+    }
+    .form-consent a:hover { color: #fff; }
+    .form-result {
+      text-align: center; padding: 0.75rem;
+      border-radius: 10px; font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .form-result.success {
+      background: rgba(74, 222, 128, 0.1);
+      color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.2);
+    }
+    .form-result.error {
+      background: rgba(248, 113, 113, 0.1);
+      color: #f87171; border: 1px solid rgba(248, 113, 113, 0.2);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--navy-900); padding: 3rem 2rem 2rem;
+      text-align: center; position: relative;
+    }
+    .footer::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue-mid), transparent);
+    }
+    .footer-logo { margin-bottom: 1.5rem; opacity: 0.7; }
+    .footer-logo svg { height: 24px; width: auto; }
+    .footer-text { font-size: 0.8rem; color: var(--blue-light); opacity: 0.5; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav { padding: 1rem 1.5rem; }
+      .nav.scrolled { padding: 0.75rem 1.5rem; }
+      .hero-symbol svg { width: 80px; }
+      .intro-inner { padding: 5rem 1.5rem 4rem; }
+      .intro-inner::before { display: none; }
+      .philosophy-section { padding: 4rem 1.5rem 5rem; }
+      .pillars { grid-template-columns: 1fr; gap: 1.25rem; }
+      .about-section { padding: 5rem 1.5rem; }
+      .products-section { padding: 6rem 1.25rem; }
+      .product-card { padding: 2rem; }
+      .product-card-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .product-visual { order: -1; }
+      .tablet-frame { width: 230px; height: 330px; padding: 10px; }
+      .section-title { margin-bottom: 3rem; }
+      .contact-section { padding: 5rem 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 2.5rem; }
+      .product-headline { font-size: 1.35rem; }
+    }
+
+    /* ===== GSAP reveal class ===== */
+    .gs-reveal { opacity: 0; transform: translateY(30px); }
+
+    [data-i18n] { transition: opacity 0.3s; }
+    .lang-switching [data-i18n] { opacity: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 420 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0 5)">
+          <path d="M0 48V20.4C0 9.14 9.14 0 20.4 0C31.66 0 40.8 9.14 40.8 20.4V48H27.2V20.4C27.2 16.64 24.16 13.6 20.4 13.6C16.64 13.6 13.6 16.64 13.6 20.4V48H0Z" fill="#fff"/>
+          <path d="M37.4 48V20.4C37.4 9.14 46.54 0 57.8 0C69.06 0 78.2 9.14 78.2 20.4V48H64.6V20.4C64.6 16.64 61.56 13.6 57.8 13.6C54.04 13.6 51 16.64 51 20.4V48H37.4Z" fill="rgba(255,255,255,0.5)"/>
+          <path d="M37.4 48V20.4C37.4 12.96 41.4 6.44 47.4 2.88C43.3 7.28 40.8 13.38 40.8 20.4V48H37.4Z" fill="rgba(255,255,255,0.7)" opacity="0.9"/>
+        </g>
+        <text x="98" y="40" font-family="'DM Sans',sans-serif" font-size="33" font-weight="600" fill="#fff" letter-spacing="-0.035em">mamvri</text>
+      </svg>
+    </a>
+    <div class="nav-right">
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn active" data-lang="el">ΕΛ</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-gradient-1"></div>
+      <div class="hero-gradient-2"></div>
+      <div class="hero-gradient-3"></div>
+      <div class="hero-grid"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-symbol">
+        <svg viewBox="0 0 276 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 170V72C0 32.24 32.24 0 72 0C111.76 0 144 32.24 144 72V170H96V72C96 58.745 85.255 48 72 48C58.745 48 48 58.745 48 72V170H0Z" fill="#fff"/>
+          <path d="M132 170V72C132 32.24 164.24 0 204 0C243.76 0 276 32.24 276 72V170H228V72C228 58.745 217.255 48 204 48C190.745 48 180 58.745 180 72V170H132Z" fill="rgba(255,255,255,0.45)"/>
+          <path d="M132 170V72C132 45.7 146.09 22.7 167.12 10.14C152.7 25.68 144 47.22 144 72V170H132Z" fill="rgba(255,255,255,0.65)" opacity="0.9"/>
+        </svg>
+      </div>
+      <h1 class="hero-title" data-i18n="heroTitle">Ψηφιακές λύσεις για<br>παραδοσιακούς κλάδους</h1>
+      <p class="hero-subtitle" data-i18n="heroSubtitle">Σχεδιάζουμε εργαλεία που μεταφέρουν αιώνιες πρακτικές στην ψηφιακή εποχή.</p>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span class="scroll-text" data-i18n="scrollText">Ανακαλύψτε</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- INTRO + PHILOSOPHY (continuous dark bg) -->
+  <div class="dark-section">
+
+    <!-- INTRO -->
+    <section class="intro-section" id="intro">
+      <div class="intro-inner">
+        <div class="intro-accent-line gs-reveal"></div>
+        <p class="intro-lead gs-reveal" data-i18n="introLead">
+          Η mamvri δημιουργεί ψηφιακά εργαλεία για χώρους που λειτουργούν ακόμη με ανθρώπινο ρυθμό.
+        </p>
+        <div class="intro-body">
+          <p class="gs-reveal" data-i18n="introBody1">Ξεκινώντας από τις ανάγκες της Ορθόδοξης Εκκλησίας και επεκτεινόμενη σε παραδοσιακούς κλάδους όπως η εστίαση και η φιλοξενία, αναπτύσσει σύγχρονες εφαρμογές που σέβονται τον τρόπο με τον οποίο πραγματικά εργάζονται οι άνθρωποι.</p>
+          <p class="gs-reveal" data-i18n="introBody2">Όχι «τεχνολογία για την τεχνολογία». Αλλά συστήματα σχεδιασμένα για οργάνωση, απλότητα και καθημερινή λειτουργία — χωρίς περιττή πολυπλοκότητα.</p>
+          <p class="gs-reveal" data-i18n="introBody3">Η mamvri λειτουργεί ως ενιαίο οικοσύστημα ανεξάρτητων εφαρμογών SaaS, καθεμία σχεδιασμένη για έναν συγκεκριμένο χώρο, με κοινή φιλοσοφία: σταθερή υποδομή, καθαρή εμπειρία χρήσης και εργαλεία που λύνουν πραγματικά προβλήματα.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHILOSOPHY -->
+    <section class="philosophy-section" id="philosophy">
+      <p class="philosophy-label gs-reveal" data-i18n="philLabel">Φιλοσοφία</p>
+      <h2 class="philosophy-title gs-reveal" data-i18n="philTitle">Τρεις αρχές, κάθε προϊόν</h2>
+      <div class="pillars">
+        <div class="pillar gs-reveal">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <h3 class="pillar-title" data-i18n="pillar1Title">Οργάνωση</h3>
+          <p class="pillar-text" data-i18n="pillar1Text">Δομή που αντικαθιστά το χάος. Τα δεδομένα βρίσκουν τη θέση τους και οι διαδικασίες γίνονται προβλέψιμες.</p>
+        </div>
+        <div class="pillar gs-reveal">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/>
+            </svg>
+          </div>
+          <h3 class="pillar-title" data-i18n="pillar2Title">Απλότητα</h3>
+          <p class="pillar-text" data-i18n="pillar2Text">Χωρίς εκπαίδευση, χωρίς εγχειρίδια. Ο χρήστης καταλαβαίνει αμέσως τι πρέπει να κάνει.</p>
+        </div>
+        <div class="pillar gs-reveal">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.49 8.49l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.49-8.49l2.83-2.83"/>
+            </svg>
+          </div>
+          <h3 class="pillar-title" data-i18n="pillar3Title">Καθημερινή λειτουργία</h3>
+          <p class="pillar-text" data-i18n="pillar3Text">Εργαλεία που λύνουν πραγματικά προβλήματα, κάθε μέρα. Σταθερά, αξιόπιστα, χωρίς εκπλήξεις.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- WHO WE ARE -->
+  <section class="about-section" id="about">
+    <div class="about-inner">
+      <p class="about-label gs-reveal" data-i18n="aboutLabel">Ποιοι είμαστε</p>
+      <h2 class="about-title gs-reveal" data-i18n="aboutTitle">Μια πρωτοβουλία με στόχο</h2>
+      <div class="about-body">
+        <p class="gs-reveal" data-i18n="about1">Η mamvri είναι μια ανεξάρτητη πρωτοβουλία ανάπτυξης λογισμικού με στόχο τη δημιουργία σύγχρονων ψηφιακών εργαλείων για χώρους που συχνά παραμένουν τεχνολογικά παραμελημένοι.</p>
+        <p class="gs-reveal" data-i18n="about2">Ξεκίνησε από την ανάγκη για πιο οργανωμένες, αξιόπιστες και πρακτικές λύσεις στον χώρο της Ορθόδοξης Εκκλησίας — όχι ως θεωρητική άσκηση τεχνολογίας, αλλά μέσα από πραγματική επαφή με την καθημερινή λειτουργία οργανισμών και ανθρώπων.</p>
+        <p class="gs-reveal" data-i18n="about3">Σήμερα, η mamvri αναπτύσσει ένα οικοσύστημα ανεξάρτητων SaaS εφαρμογών με κοινή φιλοσοφία: καθαρή εμπειρία χρήσης, σταθερή υποδομή και εργαλεία που εξυπηρετούν την πράξη και όχι τον εντυπωσιασμό.</p>
+        <p class="gs-reveal" data-i18n="about4">Η προσέγγισή μας βασίζεται στην ιδέα ότι η καλή τεχνολογία δεν χρειάζεται να είναι θορυβώδης ή περίπλοκη. Χρειάζεται να είναι κατανοητή, αξιόπιστη και πραγματικά χρήσιμη σε όσους τη χρησιμοποιούν καθημερινά.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="products-section" id="products">
+    <div class="section-label gs-reveal" data-i18n="sectionLabel">Προϊόντα</div>
+    <h2 class="section-title gs-reveal" data-i18n="sectionTitle">Αυτό που φτιάξαμε</h2>
+    <div class="product-card-container">
+      <div class="product-card gs-reveal" id="productCard">
+        <div class="product-card-inner">
+          <div class="product-info">
+            <div class="product-logo">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" height="45">
+                <g transform="translate(0, 3)">
+                  <path d="M24 0 Q24 3 21 4 L3 10 Q0 11 0 14 L0 38 Q0 40 3 39 L21 32 Q24 31 24 28 Z" fill="none" stroke="#9B7521" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M26 0 Q26 3 29 4 L47 10 Q50 11 50 14 L50 38 Q50 40 47 39 L29 32 Q26 31 26 28 Z" fill="none" stroke="#9B7521" stroke-width="1.5" stroke-linejoin="round"/>
+                  <line x1="5" y1="18" x2="19" y2="13" stroke="#9B7521" stroke-width="0.6" opacity="0.35"/>
+                  <line x1="5" y1="23" x2="18" y2="18" stroke="#9B7521" stroke-width="0.6" opacity="0.35"/>
+                  <line x1="5" y1="28" x2="19" y2="23" stroke="#9B7521" stroke-width="0.6" opacity="0.35"/>
+                  <line x1="33" y1="13" x2="47" y2="18" stroke="#9B7521" stroke-width="0.6" opacity="0.35"/>
+                  <line x1="34" y1="18" x2="47" y2="23" stroke="#9B7521" stroke-width="0.6" opacity="0.35"/>
+                  <line x1="33" y1="23" x2="47" y2="28" stroke="#9B7521" stroke-width="0.6" opacity="0.35"/>
+                </g>
+                <text x="62" y="26" font-family="Caudex, serif" font-style="italic" font-weight="700" fill="#9B7521" font-size="22" letter-spacing="0.8">μνημόνευσις</text>
+                <text x="62" y="42" font-family="Caudex, serif" font-weight="400" fill="#9B7521" font-size="8" letter-spacing="1.8" opacity="0.6">ΨΗΦΙΑΚΑ ΔΙΠΤΥΧΑ</text>
+              </svg>
+            </div>
+            <h3 class="product-headline" data-i18n="productHeadline">Τα δίπτυχα του ναού σας, ψηφιακά.</h3>
+            <p class="product-description" data-i18n="productDescription">Ένα tablet στην είσοδο του ναού. Οι πιστοί καταχωρούν ονόματα. Εσείς τα βλέπετε σε πραγματικό χρόνο. Εκτυπώνετε μ' ένα κλικ.</p>
+            <a href="https://mnemoneusis.mamvri.com" target="_blank" class="product-cta">
+              <span data-i18n="productCta">Μάθετε περισσότερα</span>
+              <svg class="cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="product-visual">
+            <div class="tablet-frame">
+              <div class="tablet-app">
+                <div class="app-church">Ι. ΝΑΟΣ ΑΓΙΟΥ ΓΕΩΡΓΙΟΥ</div>
+                <div class="app-heading">Εισαγωγή Ονομάτων</div>
+                <div class="app-date">Θεία Λειτουργία — 18 Μαΐου 2026</div>
+
+                <div class="app-section-label">
+                  <span class="app-section-dot"></span>
+                  <span class="app-section-text">ΥΠΕΡ ΥΓΕΙΑΣ</span>
+                </div>
+                <div class="app-name-card"><span class="app-name-text">Γεωργίου</span><span class="app-name-tag">γονέων</span></div>
+                <div class="app-name-card"><span class="app-name-text">Μαρίας</span><span class="app-name-tag">τέκνων</span></div>
+                <div class="app-name-card"><span class="app-name-text">Ελένης</span><span class="app-name-tag">συγγενών</span></div>
+
+                <div class="app-section-label" style="margin-top:0.5rem;">
+                  <span class="app-section-dot"></span>
+                  <span class="app-section-text">ΥΠΕΡ ΑΝΑΠΑΥΣΕΩΣ</span>
+                </div>
+                <div class="app-name-card"><span class="app-name-text">Κωνσταντίνου</span><span class="app-name-tag">πάππων</span></div>
+                <div class="app-name-card"><span class="app-name-text">Αικατερίνης</span><span class="app-name-tag">γονέων</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="contact-inner">
+      <p class="contact-label gs-reveal" data-i18n="contactLabel">Επικοινωνία</p>
+      <h2 class="contact-title gs-reveal" data-i18n="contactTitle">Ας μιλήσουμε</h2>
+      <p class="contact-subtitle gs-reveal" data-i18n="contactSubtitle">Θέλετε να μάθετε περισσότερα ή να συζητήσουμε μια συνεργασία; Στείλτε μας μήνυμα.</p>
+
+      <!-- Web3Forms: Get your access key at https://web3forms.com (enter info@mamvri.com) -->
+      <form class="contact-form gs-reveal" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+        <input type="hidden" name="subject" value="Νέο μήνυμα από mamvri.com">
+        <input type="hidden" name="from_name" value="Mamvri Contact Form">
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+        <!-- Auto-reply to sender -->
+        <input type="hidden" name="autoresponse" value="Σας ευχαριστούμε για το μήνυμά σας. Το λάβαμε και θα σας απαντήσουμε το συντομότερο δυνατό.&#10;&#10;Με εκτίμηση,&#10;Mamvri">
+        <input type="hidden" name="replyto" value="info@mamvri.com">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="name" data-i18n="formName">Όνομα</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-field">
+            <label for="email" data-i18n="formEmail">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="message" data-i18n="formMessage">Μήνυμα</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="formBtn">
+          <span data-i18n="formSubmit">Αποστολή</span>
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <div id="formResult" class="form-result" style="display:none;"></div>
+      </form>
+      <p class="form-consent gs-reveal" data-i18n="formConsent">Παρέχοντάς μας τα στοιχεία σου, συναινείς στη συλλογή και χρήση των πληροφοριών σου σύμφωνα με τους <a href="/terms.html" target="_blank">Όρους Χρήσης</a> και την <a href="/privacy.html" target="_blank">Πολιτική Απορρήτου</a>.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">
+      <svg viewBox="0 0 200 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="100" y="20" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="22" font-weight="600" fill="rgba(255,255,255,0.5)" letter-spacing="-0.035em">mamvri</text>
+      </svg>
+    </div>
+    <p class="footer-text">© 2026 Mamvri. <span data-i18n="footerRights">Με επιφύλαξη παντός δικαιώματος.</span></p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    /* ===== i18n ===== */
+    const T = {
+      el: {
+        heroTitle: 'Ψηφιακές λύσεις για<br>παραδοσιακούς κλάδους',
+        heroSubtitle: 'Σχεδιάζουμε εργαλεία που μεταφέρουν αιώνιες πρακτικές στην ψηφιακή εποχή.',
+        scrollText: 'Ανακαλύψτε',
+        introLead: 'Η mamvri δημιουργεί ψηφιακά εργαλεία για χώρους που λειτουργούν ακόμη με ανθρώπινο ρυθμό.',
+        introBody1: 'Ξεκινώντας από τις ανάγκες της Ορθόδοξης Εκκλησίας και επεκτεινόμενη σε παραδοσιακούς κλάδους όπως η εστίαση και η φιλοξενία, αναπτύσσει σύγχρονες εφαρμογές που σέβονται τον τρόπο με τον οποίο πραγματικά εργάζονται οι άνθρωποι.',
+        introBody2: 'Όχι «τεχνολογία για την τεχνολογία». Αλλά συστήματα σχεδιασμένα για οργάνωση, απλότητα και καθημερινή λειτουργία — χωρίς περιττή πολυπλοκότητα.',
+        introBody3: 'Η mamvri λειτουργεί ως ενιαίο οικοσύστημα ανεξάρτητων εφαρμογών SaaS, καθεμία σχεδιασμένη για έναν συγκεκριμένο χώρο, με κοινή φιλοσοφία: σταθερή υποδομή, καθαρή εμπειρία χρήσης και εργαλεία που λύνουν πραγματικά προβλήματα.',
+        philLabel: 'Φιλοσοφία',
+        philTitle: 'Τρεις αρχές, κάθε προϊόν',
+        pillar1Title: 'Οργάνωση',
+        pillar1Text: 'Δομή που αντικαθιστά το χάος. Τα δεδομένα βρίσκουν τη θέση τους και οι διαδικασίες γίνονται προβλέψιμες.',
+        pillar2Title: 'Απλότητα',
+        pillar2Text: 'Χωρίς εκπαίδευση, χωρίς εγχειρίδια. Ο χρήστης καταλαβαίνει αμέσως τι πρέπει να κάνει.',
+        pillar3Title: 'Καθημερινή λειτουργία',
+        pillar3Text: 'Εργαλεία που λύνουν πραγματικά προβλήματα, κάθε μέρα. Σταθερά, αξιόπιστα, χωρίς εκπλήξεις.',
+        aboutLabel: 'Ποιοι είμαστε',
+        aboutTitle: 'Μια πρωτοβουλία με στόχο',
+        about1: 'Η mamvri είναι μια ανεξάρτητη πρωτοβουλία ανάπτυξης λογισμικού με στόχο τη δημιουργία σύγχρονων ψηφιακών εργαλείων για χώρους που συχνά παραμένουν τεχνολογικά παραμελημένοι.',
+        about2: 'Ξεκίνησε από την ανάγκη για πιο οργανωμένες, αξιόπιστες και πρακτικές λύσεις στον χώρο της Ορθόδοξης Εκκλησίας — όχι ως θεωρητική άσκηση τεχνολογίας, αλλά μέσα από πραγματική επαφή με την καθημερινή λειτουργία οργανισμών και ανθρώπων.',
+        about3: 'Σήμερα, η mamvri αναπτύσσει ένα οικοσύστημα ανεξάρτητων SaaS εφαρμογών με κοινή φιλοσοφία: καθαρή εμπειρία χρήσης, σταθερή υποδομή και εργαλεία που εξυπηρετούν την πράξη και όχι τον εντυπωσιασμό.',
+        about4: 'Η προσέγγισή μας βασίζεται στην ιδέα ότι η καλή τεχνολογία δεν χρειάζεται να είναι θορυβώδης ή περίπλοκη. Χρειάζεται να είναι κατανοητή, αξιόπιστη και πραγματικά χρήσιμη σε όσους τη χρησιμοποιούν καθημερινά.',
+        sectionLabel: 'Προϊόντα',
+        sectionTitle: 'Αυτό που φτιάξαμε',
+        productHeadline: 'Τα δίπτυχα του ναού σας, ψηφιακά.',
+        productDescription: 'Ένα tablet στην είσοδο του ναού. Οι πιστοί καταχωρούν ονόματα. Εσείς τα βλέπετε σε πραγματικό χρόνο. Εκτυπώνετε μ\' ένα κλικ.',
+        productCta: 'Μάθετε περισσότερα',
+        tabLiving: 'ΖΩΝΤΕΣ',
+        tabDeceased: 'ΚΕΚΟΙΜΗΜΕΝΟΙ',
+        appPlaceholder: 'Προσθήκη ονόματος...',
+        contactLabel: 'Επικοινωνία',
+        contactTitle: 'Ας μιλήσουμε',
+        contactSubtitle: 'Θέλετε να μάθετε περισσότερα ή να συζητήσουμε μια συνεργασία; Στείλτε μας μήνυμα.',
+        formName: 'Όνομα',
+        formEmail: 'Email',
+        formMessage: 'Μήνυμα',
+        formSubmit: 'Αποστολή',
+        formConsent: 'Παρέχοντάς μας τα στοιχεία σου, συναινείς στη συλλογή και χρήση των πληροφοριών σου σύμφωνα με τους <a href="/terms.html" target="_blank">Όρους Χρήσης</a> και την <a href="/privacy.html" target="_blank">Πολιτική Απορρήτου</a>.',
+        formSuccess: 'Το μήνυμά σας στάλθηκε επιτυχώς!',
+        formError: 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.',
+        footerRights: 'Με επιφύλαξη παντός δικαιώματος.'
+      },
+      en: {
+        heroTitle: 'Digital solutions for<br>traditional industries',
+        heroSubtitle: 'We build tools that bring timeless practices into the digital age.',
+        scrollText: 'Discover',
+        introLead: 'Mamvri builds digital tools for spaces that still operate at a human pace.',
+        introBody1: 'Starting from the needs of the Orthodox Church and expanding into traditional sectors like food service and hospitality, we develop modern applications that respect the way people actually work.',
+        introBody2: 'Not "technology for technology\'s sake." But systems designed for organization, simplicity, and daily operations — without unnecessary complexity.',
+        introBody3: 'Mamvri operates as a unified ecosystem of independent SaaS applications, each designed for a specific industry, with a shared philosophy: solid infrastructure, clean user experience, and tools that solve real problems.',
+        philLabel: 'Philosophy',
+        philTitle: 'Three principles, every product',
+        pillar1Title: 'Organization',
+        pillar1Text: 'Structure that replaces chaos. Data finds its place and processes become predictable.',
+        pillar2Title: 'Simplicity',
+        pillar2Text: 'No training, no manuals. The user immediately understands what to do.',
+        pillar3Title: 'Daily operation',
+        pillar3Text: 'Tools that solve real problems, every day. Stable, reliable, no surprises.',
+        aboutLabel: 'Who we are',
+        aboutTitle: 'An initiative with purpose',
+        about1: 'Mamvri is an independent software development initiative focused on creating modern digital tools for spaces that are often technologically neglected.',
+        about2: 'It started from the need for more organized, reliable, and practical solutions in the Orthodox Church — not as a theoretical technology exercise, but through real contact with the daily operations of organizations and people.',
+        about3: 'Today, mamvri is developing an ecosystem of independent SaaS applications with a shared philosophy: clean user experience, solid infrastructure, and tools that serve practice rather than impressions.',
+        about4: 'Our approach is based on the idea that good technology doesn\'t need to be loud or complex. It needs to be understandable, reliable, and genuinely useful to those who use it every day.',
+        sectionLabel: 'Products',
+        sectionTitle: 'What we\'ve built',
+        productHeadline: 'Your parish diptychs, digitized.',
+        productDescription: 'A tablet at the church entrance. Parishioners submit names. You see them in real time. Print with one click.',
+        productCta: 'Learn more',
+        tabLiving: 'LIVING',
+        tabDeceased: 'DECEASED',
+        appPlaceholder: 'Add a name...',
+        contactLabel: 'Contact',
+        contactTitle: 'Let\'s talk',
+        contactSubtitle: 'Want to learn more or discuss a collaboration? Send us a message.',
+        formName: 'Name',
+        formEmail: 'Email',
+        formMessage: 'Message',
+        formSubmit: 'Send',
+        formConsent: 'By providing your details, you consent to the collection and use of your information in accordance with our <a href="/terms.html" target="_blank">Terms of Use</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>.',
+        formSuccess: 'Your message was sent successfully!',
+        formError: 'Something went wrong. Please try again.',
+        footerRights: 'All rights reserved.'
+      }
+    };
+
+    let currentLang = 'el';
+    function setLanguage(lang) {
+      if (lang === currentLang) return;
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.body.classList.add('lang-switching');
+      setTimeout(() => {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (T[lang][key]) el.innerHTML = T[lang][key];
+        });
+        document.body.classList.remove('lang-switching');
+      }, 300);
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+    }
+    document.getElementById('langToggle').addEventListener('click', e => {
+      const btn = e.target.closest('.lang-btn');
+      if (btn) setLanguage(btn.dataset.lang);
+    });
+
+    /* ===== NAV ===== */
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    /* ===== GSAP ===== */
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero entrance
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    heroTl
+      .to('.hero-symbol', { opacity: 1, duration: 1.2, delay: 0.3 })
+      .from('.hero-symbol svg path:first-child', { y: -30, opacity: 0, duration: 0.8 }, '-=0.8')
+      .from('.hero-symbol svg path:nth-child(2)', { y: -30, opacity: 0, duration: 0.8 }, '-=0.5')
+      .to('.hero-title', { opacity: 1, duration: 1 }, '-=0.4')
+      .from('.hero-title', { y: 40 }, '-=1')
+      .to('.hero-subtitle', { opacity: 1, duration: 0.8 }, '-=0.6')
+      .from('.hero-subtitle', { y: 25 }, '-=0.8')
+      .to('.hero-scroll-indicator', { opacity: 0.7, duration: 1 }, '-=0.3');
+
+    // Hero parallax
+    gsap.to('.hero-gradient-1', { y: -100, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+    gsap.to('.hero-gradient-2', { y: -60, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+    gsap.to('.hero-content', { y: -80, opacity: 0, scrollTrigger: { trigger: '.hero', start: 'center center', end: 'bottom top', scrub: 1 } });
+
+    // Generic scroll reveals for .gs-reveal
+    document.querySelectorAll('.gs-reveal').forEach(el => {
+      gsap.to(el, {
+        opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 88%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+    });
+
+    // Stagger pillars
+    gsap.to('.pillar.gs-reveal', {
+      opacity: 1, y: 0, duration: 0.8, stagger: 0.15,
+      scrollTrigger: { trigger: '.pillars', start: 'top 85%', toggleActions: 'play none none reverse' }
+    });
+
+    // Tablet name cards — staggered
+    ScrollTrigger.create({
+      trigger: '.product-card', start: 'top 70%',
+      onEnter: () => gsap.to('.app-name-card', { opacity: 1, y: 0, duration: 0.4, stagger: 0.1, ease: 'power2.out' }),
+      onLeaveBack: () => gsap.to('.app-name-card', { opacity: 0, y: 6, duration: 0.25, stagger: 0.04 })
+    });
+
+    // Tablet parallax
+    gsap.to('.tablet-frame', {
+      y: -20,
+      scrollTrigger: { trigger: '.product-card', start: 'top bottom', end: 'bottom top', scrub: 1 }
+    });
+
+    // Contact form AJAX submission
+    const form = document.getElementById('contactForm');
+    const result = document.getElementById('formResult');
+    const btn = document.getElementById('formBtn');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.querySelector('span').textContent = '...';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          result.className = 'form-result success';
+          result.textContent = T[currentLang].formSuccess;
+          result.style.display = 'block';
+          form.reset();
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        result.className = 'form-result error';
+        result.textContent = T[currentLang].formError;
+        result.style.display = 'block';
+      }
+
+      btn.disabled = false;
+      btn.querySelector('span').textContent = T[currentLang].formSubmit;
+      setTimeout(() => { result.style.display = 'none'; }, 5000);
+    });
+  </script>
+</body>
+</html>
